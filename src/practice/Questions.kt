@@ -9,17 +9,8 @@ fun main() {
 //    testDynamicArray()
 //    testRotateLeft()
 //    testIsBalanced()
-}
-
-fun lerp(start: Int, stop: Int, fraction: Float): Float {
-    (stop - start) * fraction + start
-//    ((stop * fraction) - (start * fraction)) + start
-//    (start - (start * fraction)) + (fraction * stop)
-//    50x - 10x + 10
-//    50x - 10(x - 1) -> 50x + 10(-x + 1) -> 50x + 10(1 - x) -> 10(1 - x) + 50x
-//    -10x + 10 -> -10(x-1) -> 10(-x + 1) -> 10(1 - x)
-//    10(1 - x) + 50x
-    return (1 - fraction) * start + fraction * stop
+//    testSparseArrays()
+    testCycleDetection()
 }
 
 // Arrays - DS
@@ -128,4 +119,62 @@ fun isBalanced(s: String): String {
     } else {
         "NO"
     }
+}
+
+// Sparse Arrays
+// https://www.hackerrank.com/challenges/sparse-arrays/problem
+fun testSparseArrays() {
+    val strings = arrayOf("aba", "baba", "aba", "xzxb")
+    val queries = arrayOf("aba", "xzxb", "ab")
+
+    val result = matchingStrings(strings, queries)
+    println(result.joinToString("\n"))
+}
+fun matchingStrings(strings: Array<String>, queries: Array<String>): Array<Int> {
+    // brute force time: O(nq) space: O(q)
+//    val resultArray = Array(queries.size) { 0 }
+//    queries.forEachIndexed { index, query ->
+//        var currentOccurrences = 0
+//        strings.forEach { string ->
+//            if (query == string) currentOccurrences++
+//        }
+//        resultArray[index] = currentOccurrences
+//    }
+//    return resultArray
+
+    // time: O(N+Q) space: O(Q+Q)
+    val resultArray = Array(queries.size) { 0 }
+    val countMap = mutableMapOf<String, Int>()
+    strings.forEach { string ->
+        val currentCount = countMap[string] ?: 0
+        countMap[string] = currentCount + 1
+    }
+    queries.forEachIndexed { index, query ->
+        val queryCurrentCount = countMap[query] ?: 0
+        resultArray[index] = queryCurrentCount
+    }
+    return resultArray
+}
+
+// Cycle Detection
+// https://www.hackerrank.com/challenges/detect-whether-a-linked-list-contains-a-cycle/problem
+class SinglyLinkedListNode(val data: Int, var next: SinglyLinkedListNode?)
+fun testCycleDetection() {
+    val node3 = SinglyLinkedListNode(3, null)
+    val node2 = SinglyLinkedListNode(2, node3)
+    val head = SinglyLinkedListNode(1, node2)
+    node3.next = node2
+    println(hasCycle(head))
+}
+fun hasCycle(head: SinglyLinkedListNode?): Boolean {
+    val visitedNodes = mutableMapOf<SinglyLinkedListNode, Boolean>()
+    if (head != null) visitedNodes[head] = true
+    var currentNode = head?.next
+    while (currentNode != null) {
+        val isVisited = visitedNodes[currentNode]
+        if (isVisited == true) return true
+        visitedNodes[currentNode] = true
+        currentNode = currentNode.next
+    }
+    return false
 }
