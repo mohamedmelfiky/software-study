@@ -10,7 +10,9 @@ fun main() {
 //    testRotateLeft()
 //    testIsBalanced()
 //    testSparseArrays()
-    testCycleDetection()
+//    testCycleDetection()
+//    testQueueUsingTwoStacks()
+//    testAlternatingCharacters()
 }
 
 // Arrays - DS
@@ -177,4 +179,111 @@ fun hasCycle(head: SinglyLinkedListNode?): Boolean {
         currentNode = currentNode.next
     }
     return false
+}
+
+// Find Merge Point of Two Lists
+// https://www.hackerrank.com/challenges/find-the-merge-point-of-two-joined-linked-lists/problem
+fun testFindMergeNode() {
+
+}
+fun findMergeNode(head1: SinglyLinkedListNode, head2: SinglyLinkedListNode): Int {
+    val map: HashSet<SinglyLinkedListNode> = HashSet()
+    var listOneNode: SinglyLinkedListNode? = head1
+    while (listOneNode != null) {
+        map.add(listOneNode)
+        listOneNode = listOneNode.next
+    }
+    var listTwoNode: SinglyLinkedListNode? = head2
+    while (listTwoNode != null) {
+        val isExist = map.contains(listTwoNode)
+        if (isExist) {
+            return listTwoNode.data
+        }
+        listTwoNode = listTwoNode.next
+    }
+    return -1
+}
+
+// Tree: Preorder Traversal
+// https://www.hackerrank.com/challenges/tree-preorder-traversal/problem
+class Node {
+    var data = 0
+    var left: Node? = null
+    var right: Node? = null
+}
+fun testPreorderTraversal() {
+
+}
+fun preorderTraversalRecursive(root: Node?) {
+    if(root == null) return
+    print("${root.data} ")
+    preorderTraversalRecursive(root.left)
+    preorderTraversalRecursive(root.right)
+}
+fun preorderTraversalStack(root: Node) {
+    val stack = Stack<Node>()
+    stack.push(root)
+    while (!stack.empty()) {
+        val current = stack.pop()
+        print("${root.data} ")
+        if (current.right != null) stack.push(current.right)
+        if (current.left != null) stack.push(current.left)
+    }
+}
+
+// Queue using Two Stacks
+// https://www.hackerrank.com/challenges/queue-using-two-stacks/problem
+fun testQueueUsingTwoStacks() {
+    queueUsingTwoStacks()
+}
+class QueueWithTwoStacks {
+    private val enqueueStack = Stack<Int>()
+    private val dequeueStack = Stack<Int>()
+
+    fun enqueue(value: Int) {
+        enqueueStack.push(value)
+    }
+
+    fun dequeue(): Int {
+        moveEnqueueToDequeue()
+        return dequeueStack.pop()
+    }
+
+    fun peek() {
+        moveEnqueueToDequeue()
+        println(dequeueStack.peek())
+    }
+
+    private fun moveEnqueueToDequeue() {
+        if (dequeueStack.isEmpty()) {
+            while (enqueueStack.isNotEmpty()) {
+                dequeueStack.push(enqueueStack.pop())
+            }
+        }
+    }
+}
+fun queueUsingTwoStacks() {
+    val queue = QueueWithTwoStacks()
+    generateSequence(::readLine).drop(1).toList().onEach { query ->
+        val querySplit = query.split(" ")
+        when (querySplit.first().toInt()) {
+            1 -> queue.enqueue(querySplit[1].toInt())
+            2 -> queue.dequeue()
+            3 -> queue.peek()
+        }
+    }
+}
+
+// Alternating Characters
+// https://www.hackerrank.com/challenges/alternating-characters/problem
+fun testAlternatingCharacters() {
+    val result = alternatingCharacters("AABBBBABABAABABBAA")
+    println(result)
+}
+fun alternatingCharacters(s: String): Int {
+    var deletionNo = 0
+    s.forEachIndexed { index, c ->
+        if (c == s.getOrNull(index - 1)) deletionNo++
+    }
+    return deletionNo
 }
