@@ -2,6 +2,11 @@ package practice
 
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.system.measureTimeMillis
 
 fun main() {
@@ -13,6 +18,10 @@ fun main() {
 //    testCycleDetection()
 //    testQueueUsingTwoStacks()
 //    testAlternatingCharacters()
+//    testMinimumDistances()
+//    testQueensAttack()
+//    testNonDivisibleSubset()
+    testTimeInWords()
 }
 
 // Arrays - DS
@@ -215,7 +224,7 @@ fun testPreorderTraversal() {
 
 }
 fun preorderTraversalRecursive(root: Node?) {
-    if(root == null) return
+    if (root == null) return
     print("${root.data} ")
     preorderTraversalRecursive(root.left)
     preorderTraversalRecursive(root.right)
@@ -286,4 +295,338 @@ fun alternatingCharacters(s: String): Int {
         if (c == s.getOrNull(index - 1)) deletionNo++
     }
     return deletionNo
+}
+
+// Minimum Distances
+// https://www.hackerrank.com/challenges/minimum-distances/problem
+fun testMinimumDistances() {
+    val result = minimumDistances(arrayOf(7, 1, 3, 4, 1, 7))
+    println(result)
+}
+fun minimumDistances(a: Array<Int>): Int {
+    val map = HashMap<Int, Int>()
+    var minValue = Int.MAX_VALUE
+
+    a.forEachIndexed { index, value ->
+        val isExist = map[value]
+        if (isExist != null) {
+            val diff = abs(isExist - index)
+            if (diff < minValue) minValue = diff
+        } else {
+            map[value] = index
+        }
+    }
+
+    return if (minValue == Int.MAX_VALUE) -1 else minValue
+}
+
+// Queen's Attack II
+// https://www.hackerrank.com/challenges/queens-attack-2/problem
+fun testQueensAttack() {
+    val no = queensAttack(
+        4,
+        0,
+        4,
+        4,
+        arrayOf()
+    )
+    println(no)
+}
+fun queensAttack(
+    rowColumnNo: Int,
+    obstaclesNo: Int,
+    queenRow: Int,
+    queenColumn: Int,
+    obstacles: Array<Array<Int>>
+): Int {
+    val queenPosition = queenRow to queenColumn
+    val obstaclesSet = HashSet<Pair<Int, Int>>()
+    obstacles.forEach {
+        obstaclesSet.add(Pair(it[0], it[1]))
+    }
+    return getPathsCount(rowColumnNo, obstaclesSet, queenPosition)
+}
+fun getPathsCount(
+    rowColumnNo: Int,
+    obstacles: HashSet<Pair<Int, Int>>,
+    queenPosition: Pair<Int, Int>
+): Int {
+    var pathsCount = 0
+    for (row in (-1..1)) {
+        for (column in (-1..1)) {
+            pathsCount += getPathCount(
+                rowColumnNo,
+                obstacles,
+                row,
+                column,
+                queenPosition.copy(
+                    queenPosition.first + row,
+                    queenPosition.second + column
+                )
+            )
+        }
+    }
+    return pathsCount
+}
+fun getPathCount(
+    rowColumnNo: Int,
+    obstacles: HashSet<Pair<Int, Int>>,
+    incrementRow: Int,
+    incrementColumn: Int,
+    cellPosition: Pair<Int, Int>
+): Int {
+    if (incrementRow == 0 && incrementColumn == 0) return 0
+    if (isObstacle(obstacles, cellPosition.first, cellPosition.second)) return 0
+    if (!isInBound(rowColumnNo, cellPosition.first, cellPosition.second)) return 0
+    if (isLastCell(rowColumnNo, cellPosition.first, cellPosition.second, incrementRow, incrementColumn)) return 1
+
+    val nextCell = cellPosition.copy(
+        cellPosition.first + incrementRow,
+        cellPosition.second + incrementColumn
+    )
+    return 1 + getPathCount(
+        rowColumnNo,
+        obstacles,
+        incrementRow,
+        incrementColumn,
+        nextCell
+    )
+}
+fun isInBound(
+    rowColumnNo: Int,
+    cellRow: Int,
+    cellColumn: Int
+): Boolean {
+    return cellRow in 1..rowColumnNo && cellColumn in 1..rowColumnNo
+}
+fun isLastCell(
+    rowColumnNo: Int,
+    cellRow: Int,
+    cellColumn: Int,
+    incrementRow: Int,
+    incrementColumn: Int
+): Boolean {
+    val row = cellRow + incrementRow
+    val column = cellColumn + incrementColumn
+    return !isInBound(rowColumnNo, row, column)
+}
+fun isObstacle(
+    obstacles: HashSet<Pair<Int, Int>>,
+    cellRow: Int,
+    cellColumn: Int
+): Boolean {
+    return obstacles.contains(Pair(cellRow, cellColumn))
+}
+
+// Non-Divisible Subset
+// https://www.hackerrank.com/challenges/non-divisible-subset/problem
+fun testNonDivisibleSubset() {
+//    val result = nonDivisibleSubset(
+//        9,
+//        arrayOf(
+//            61197933,
+//            56459859,
+//            319018589,
+//            271720536,
+//            358582070,
+//            849720202,
+//            481165658,
+//            675266245,
+//            541667092,
+//            615618805,
+//            129027583,
+//            755570852,
+//            437001718,
+//            86763458,
+//            791564527,
+//            163795318,
+//            981341013,
+//            516958303,
+//            592324531,
+//            611671866,
+//            157795445,
+//            718701842,
+//            773810960,
+//            72800260,
+//            281252802,
+//            404319361,
+//            757224413,
+//            682600363,
+//            606641861,
+//            986674925,
+//            176725535,
+//            256166138,
+//            827035972,
+//            124896145,
+//            37969090,
+//            136814243,
+//            274957936,
+//            980688849,
+//            293456190,
+//            141209943,
+//            346065260,
+//            550594766,
+//            132159011,
+//            491368651,
+//            3772767,
+//            131852400,
+//            633124868,
+//            148168785,
+//            339205816,
+//            705527969,
+//            551343090,
+//            824338597,
+//            241776176,
+//            286091680,
+//            919941899,
+//            728704934,
+//            37548669,
+//            513249437,
+//            888944501,
+//            239457900,
+//            977532594,
+//            140391002,
+//            260004333,
+//            911069927,
+//            586821751,
+//            113740158,
+//            370372870,
+//            97014913,
+//            28011421,
+//            489017248,
+//            492953261,
+//            73530695,
+//            27277034,
+//            570013262,
+//            81306939,
+//            519086053,
+//            993680429,
+//            599609256,
+//            639477062,
+//            677313848,
+//            950497430,
+//            672417749,
+//            266140123,
+//            601572332,
+//            273157042,
+//            777834449,
+//            123586826
+//        )
+//    )
+
+    val result = nonDivisibleSubset(4, arrayOf(5, 9, 13, 17))
+    println(result)
+}
+fun nonDivisibleSubset(divisor: Int, numbers: Array<Int>): Int {
+    val allReminders = IntArray(divisor)
+    numbers.forEach { number ->
+        val index = number % divisor
+        allReminders[index]++
+    }
+
+    val zeroRem = allReminders[0]
+    allReminders[0] = min(zeroRem, 1)
+
+    var result = 0
+    result += allReminders[0]
+
+    if (divisor % 2 == 0) {
+        val midPointValue = allReminders[divisor / 2]
+        result += min(midPointValue, 1)
+    }
+
+    for (number in 1..(allReminders.lastIndex / 2)) {
+        val counterPart = divisor - number
+        val maxValue = max(allReminders[number], allReminders[counterPart])
+        result += maxValue
+    }
+
+    println(allReminders.joinToString())
+
+    return result
+}
+fun allSubSets(originalSet: List<Int>): Set<Set<Int>> {
+    val sets = mutableSetOf<Set<Int>>()
+    if (originalSet.isEmpty()) {
+        sets.add(emptySet())
+        return sets
+    }
+    val head = originalSet[0]
+    val rest = originalSet.subList(1, originalSet.size)
+    allSubSets(rest).forEach { set ->
+        val newSet = HashSet<Int>()
+        newSet.add(head)
+        newSet.addAll(set)
+        sets.add(newSet)
+        sets.add(set)
+    }
+    return sets
+}
+
+// The Time in Words
+// https://www.hackerrank.com/challenges/the-time-in-words/problem
+fun testTimeInWords() {
+    val result = timeInWords(7, 0)
+    println(result)
+}
+fun timeInWords(h: Int, m: Int): String {
+    return when(m) {
+        0 -> "${h.toNumberString()} o' clock"
+        in 0..30 -> {
+            val minuteString = if (m == 15) {
+                "quarter"
+            } else if (m == 30) {
+                "half"
+            } else {
+                val minuteString = if (m == 1 ) "minute" else "minutes"
+                "${m.toNumberString()} $minuteString"
+            }
+
+            "$minuteString past ${h.toNumberString()}"
+        }
+        else -> {
+            val remainingMinutes = (60 - m)
+            val minuteString = if (remainingMinutes == 15) {
+                "quarter"
+            } else {
+                val minuteString = if (remainingMinutes == 1 ) "minute" else "minutes"
+                "${remainingMinutes.toNumberString()} $minuteString"
+            }
+            "$minuteString to ${(h + 1).toNumberString()}"
+        }
+    }
+}
+fun Int.toNumberString(): String {
+    return when(this) {
+        1 -> "one"
+        2 -> "two"
+        3 -> "three"
+        4 -> "four"
+        5 -> "five"
+        6 -> "six"
+        7 -> "seven"
+        8 -> "eight"
+        9 -> "nine"
+        10 -> "ten"
+        11 -> "eleven"
+        12 -> "twelve"
+        13 -> "thirteen"
+        14 -> "fourteen"
+        15 -> "fifteen"
+        16 -> "sixteen"
+        17 -> "seventeen"
+        18 -> "eighteen"
+        19 -> "nineteen"
+        20 -> "twenty"
+        21 -> "twenty one"
+        22 -> "twenty two"
+        23 -> "twenty three"
+        24 -> "twenty four"
+        25 -> "twenty five"
+        26 -> "twenty six"
+        27 -> "twenty seven"
+        28 -> "twenty eight"
+        29 -> "twenty nine"
+        else -> "thirty"
+    }
 }
