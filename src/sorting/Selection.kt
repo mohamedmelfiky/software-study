@@ -1,13 +1,13 @@
 package sorting
 
-data class PersonName(
-    val firstName: String,
-    val lastName: String
-) {
-    override fun toString(): String {
-        return "$firstName $lastName"
-    }
-}
+/**
+ * time: best -> Ω(N2) average -> Θ(N2) worst -> O(N2)
+ * space: O(1) in-place
+ * stability: not stable
+ * arrays: works lists: works
+ * offline algorithm: require access to the entire input
+ * notes: more efficient than selection and bubble sort
+ */
 
 fun main() {
 //    val list = mutableListOf("Sama", "Radhika", "Lacie", "Rodrigo", "Keri", "Ayisha", "Shanai")
