@@ -6,7 +6,7 @@ package sorting
  * stability: not stable
  * arrays: works lists: works
  * offline algorithm: require access to the entire input
- * notes: more efficient than selection and bubble sort
+ * notes:
  */
 
 fun main() {
