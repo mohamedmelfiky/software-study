@@ -21,7 +21,8 @@ fun main() {
 //    testMinimumDistances()
 //    testQueensAttack()
 //    testNonDivisibleSubset()
-    testTimeInWords()
+//    testTimeInWords()
+//    testChocolateFeast()
 }
 
 // Arrays - DS
@@ -629,4 +630,30 @@ fun Int.toNumberString(): String {
         29 -> "twenty nine"
         else -> "thirty"
     }
+}
+
+// Chocolate Feast
+// https://www.hackerrank.com/challenges/chocolate-feast/problem
+fun testChocolateFeast() {
+    println(chocolateFeast(10, 2, 5))
+}
+fun chocolateFeast(money: Int, cost: Int, coupons: Int): Int {
+    var bars = money / cost
+    var reminder = bars
+    while (reminder >= coupons) {
+        reminder -= coupons
+        bars++
+        reminder++
+    }
+    return bars
+}
+
+// Organizing Containers of Balls
+// https://www.hackerrank.com/challenges/organizing-containers-of-balls/problem
+fun testOrganizingContainers() {
+//    organizingContainers()
+}
+fun organizingContainers(container: Array<Array<Int>>): String {
+    val containers = container.size
+    return ""
 }
