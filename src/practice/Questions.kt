@@ -23,6 +23,7 @@ fun main() {
 //    testNonDivisibleSubset()
 //    testTimeInWords()
 //    testChocolateFeast()
+    testTowersOfHanoi()
 }
 
 // Arrays - DS
@@ -648,12 +649,16 @@ fun chocolateFeast(money: Int, cost: Int, coupons: Int): Int {
     return bars
 }
 
-// Organizing Containers of Balls
-// https://www.hackerrank.com/challenges/organizing-containers-of-balls/problem
-fun testOrganizingContainers() {
-//    organizingContainers()
+fun testTowersOfHanoi() {
+    towersOfHanoi(3, 1, 3)
 }
-fun organizingContainers(container: Array<Array<Int>>): String {
-    val containers = container.size
-    return ""
+fun towersOfHanoi(n: Int, start: Int, end: Int) {
+    if (n == 1) return printMove(start, end)
+    val other = 6 - (start + end)
+    towersOfHanoi(n - 1, start, other)
+    printMove(start, end)
+    towersOfHanoi(n - 1, other, end)
+}
+fun printMove(start: Int, end: Int) {
+    println("$start -> $end")
 }
